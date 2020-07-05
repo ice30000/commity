@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sqr.dao.IAccountMap">
+    <!--配置account和user的resultMap-->
+    <resultMap id="accountUserMap" type="account">
+        <!--主键字段的对应-->
+        <id property="id" column="aid"></id>
+        <!--非主键字段的对应-->
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+        <!--一对一的关系映射:配置封装user的内容
+        select属性指定的内容，查询用户的唯一属性
+        column属性指定的内容，用户通过id查询的参数
+        -->
+        <association property="user" column="uid" javaType="user" select="sqr.dao.IUserMap.findUserById"></association>
+    </resultMap>
+    <select id="findAllAccount" resultMap="accountUserMap">
+        select  *from account
+    </select>
+
+    <select id="findAllAccountUser_2" resultMap="accountUserMap">
+        select u.*,a.id as aid ,a.uid,a.money from account a,user u where a.uid = u.id
+    </select>
+    <!--根据id查询账户-->
+    <select id="findAccountById" resultType="account">
+        select *from account where uid = #{uid}
+    </select>
+</mapper>

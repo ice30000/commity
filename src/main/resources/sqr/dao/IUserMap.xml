@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sqr.dao.IUserMap">
+    <!-- 配置 查询结果的列名和实体类的属性名的对应关系 -->
+    <resultMap id="map" type="sqr.domain.User">
+        <!-- 主键字段的对应 -->
+        <id property="id" column="id"></id>
+        <!--非主键字段的对应-->
+        <result property="username" column="username"></result>
+        <result property="address" column="address"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+        <!--配置User对象中account集合的映射-->
+        <collection property="accounts" ofType="account" select="sqr.dao.IAccountMap.findAccountById" column="id"></collection>
+    </resultMap>
+    <sql id = "defaultUser" >
+        select from user
+    </sql>
+    <!--查询用户-->
+    <select id="findAll" resultMap="map">
+      select *from user
+    </select>
+    <!--通过id查询用户-->
+    <select id="findUserById" parameterType="int" resultType="user">
+        select *from user where id = #{uid}
+    </select>
+
+</mapper>
